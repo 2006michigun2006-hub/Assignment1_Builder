@@ -1,52 +1,53 @@
-import java.util.Scanner;
-class java_real_training {
-    static class Liver {
-        String color;
-        final String name;
-        Boolean hasDisease;
-        int probeg;
-        public Liver(String color, String name, Boolean hasDisease, int probeg) {
-            this.color = color;
-            this.name = name;
-            this.hasDisease = hasDisease;
-            this.probeg = probeg;
+class BuilderPattern {
+    //Product
+    public static class Heart {
+        private int p;
+        private int b;
+        public int getP() {
+            return p;
         }
-        public void votLiver() {
-            System.out.println("This liver is " + color + ", it's name is " + name + ". Unfortunately or not, the statement that it has disease is " + hasDisease + " and it already worked hard for " + probeg + " hours");
+        public int getB() {
+            return b;
+        }
+        public void talk() {
+            System.out.println("I have " + p + " pression and " + b + " liters of blood");
         }
     }
-    static class Organs_Builder {
-        String color = "red";
-        String name = "Neizvestno";
-        Boolean hasDisease = false;
-        int probeg = 0;
-        public Organs_Builder votcolor(String color) {
-            this.color = color;
-            return this;
+    //Builder interface
+    public static abstract interface HeartBuilder {
+        void setP(int p);
+        void setB(int b);
+        Heart build();
+    }
+    //Concrete builder
+    public static class StrongHeartBuilder implements HeartBuilder {
+        Heart heart = new Heart();
+        @Override
+        public void setP(int p) {
+            heart.p = p;
         }
-        public Organs_Builder votname(String name) {
-            this.name = name;
-            return this;
+        @Override
+        public void setB(int b) {
+            heart.b = b;
         }
-        public Organs_Builder votdisease(Boolean hasDisease) {
-            this.hasDisease = hasDisease;
-            return this;
-        }
-        public Organs_Builder votprobeg(int probeg) {
-            this.probeg = probeg;
-            return this;
-        }
-        public Liver proverka() {
-            return new Liver(color, name, hasDisease, probeg);
+        @Override
+        public Heart build() {
+            return heart;
         }
     }
-    public static void main(String[] poopiSHE) {
-        Liver liver1 = new Organs_Builder()
-                .votcolor("Brown")
-                .votname("Khovansky")
-                .votdisease(true)
-                .votprobeg(228228)
-                .proverka();
-        liver1.votLiver();
+    //Director
+    public static class Director {
+        public Heart create(HeartBuilder builder) {
+            builder.setP(1000);
+            builder.setB(5);
+            return builder.build();
+        }
+    }
+    //Client
+    public static void main(String[] poop) {
+        Director d = new Director();
+        HeartBuilder builder = new StrongHeartBuilder();
+        Heart heart = d.create(builder);
+        System.out.println(heart.getB());
     }
 }
